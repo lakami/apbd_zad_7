@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using zad7_apbd.Models;
 using zad7_apbd.Repo;
 
@@ -20,6 +21,25 @@ public class TripsController : ControllerBase
     [HttpGet]
     public async Task<IEnumerable<GetTripsDTO>> getTrips()
     {
-        return new List<GetTripsDTO>();
+        return await _context.Trips
+            .OrderByDescending(t => t.DateFrom)
+            .Select(t => new GetTripsDTO
+            {
+                Name = t.Name,
+                Description = t.Description,
+                DateFrom = t.DateFrom,
+                DateTo = t.DateTo,
+                MaxPeople = t.MaxPeople,
+                Countries = t.Countries.Select(country => new CountryDTO
+                {
+                    Name = country.Name
+                }),
+                Clients = t.ClientTrips.Select(clientTrip => new ClientDTO
+                {
+                    FirstName = clientTrip.Client.FirstName,
+                    LastName = clientTrip.Client.LastName
+                })
+            })
+            .ToListAsync();
     }
 }

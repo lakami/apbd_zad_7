@@ -16,5 +16,5 @@ public partial class Trip
 
     public virtual ICollection<ClientTrip> ClientTrips { get; set; } = new List<ClientTrip>();
 
-    public virtual ICollection<Country> IdCountries { get; set; } = new List<Country>();
+    public virtual ICollection<Country> Countries { get; set; } = new List<Country>();
 }
